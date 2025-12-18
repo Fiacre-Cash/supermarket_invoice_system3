@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales History - Supermarket Invoice System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="topbar-brand">
+                <img src="assets/logo.png" alt="Logo" class="topbar-logo" onerror="this.style.display='none'">
+                <span>Supermarket Invoice System</span>
+            </div>
+            <div class="topbar-actions">
+                <span class="user-info" id="userInfo"></span>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="products.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span>Products</span>
+                </a>
+                <a href="sales.html" class="nav-item active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <span>Sales History</span>
+                </a>
+                <a href="billing.html" class="nav-item" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Billing</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content compact-layout">
+            <div class="page-header-reports">
+                <div class="header-left">
+                    <h1>Sales Reports</h1>
+                    <p class="header-subtitle">Track and analyze your sales performance</p>
+                </div>
+                <div class="header-right">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterReports('today')">Today</button>
+                        <button class="filter-tab" onclick="filterReports('week')">This Week</button>
+                        <button class="filter-tab" onclick="filterReports('month')">This Month</button>
+                        <button class="filter-tab" onclick="filterReports('year')">This Year</button>
+                    </div>
+                    <button class="btn-export" onclick="exportReport()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Filter Section -->
+            <div class="custom-filter-section">
+                <h3>Custom Filters</h3>
+                <div class="custom-filter-row">
+                    <div class="form-group">
+                        <label for="fromDate">From Date</label>
+                        <input type="date" id="fromDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="toDate">To Date</label>
+                        <input type="date" id="toDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="cashierFilter">Cashier</label>
+                        <select id="cashierFilter" class="form-control">
+                            <option value="">All Cashiers</option>
+                            <option value="cashier1">Cashier 1</option>
+                            <option value="cashier2">Cashier 2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary" onclick="applyCustomFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <!-- Sales Trend Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Sales Trend</h3>
+                            <div class="chart-subtitle">Daily sales performance</div>
+                        </div>
+                        <select class="chart-select" onchange="updateSalesChart(this.value)">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div>
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+
+                <!-- Revenue by Category Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Revenue by Category</h3>
+                            <div class="chart-subtitle">Distribution of sales</div>
+                        </div>
+                        <select class="chart-select" onchange="updateCategoryChart(this.value)">
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                        </select>
+                    </div>
+                    <canvas id="revenueCategoryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="stats-grid compact">
+                <div class="stat-card">
+                    <h3>Total Invoices</h3>
+                    <p class="stat-value" id="totalInvoices">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <p class="stat-value" id="totalRevenue">0 RWF</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Sale</h3>
+                    <p class="stat-value" id="averageSale">0 RWF</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total VAT Collected</h3>
+                    <p class="stat-value" id="totalVat">0 RWF</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Cashier</th>
+                            <th>Items</th>
+                            <th>Total (RWF)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/sales.js"></script>
+    <script>
+        checkAuth('admin');
+        displayUserInfo();
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Initialize reports when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            loadSalesData();
+        });
+
+        function filterReports(period) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Load data for the selected period
+            loadSalesData(period);
+        }
+
+        function applyCustomFilters() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const cashier = document.getElementById('cashierFilter').value;
+            
+            console.log('Applying filters:', { fromDate, toDate, cashier });
+            loadSalesData('custom', { fromDate, toDate, cashier });
+        }
+
+        function resetFilters() {
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            document.getElementById('cashierFilter').value = '';
+            
+            // Reset to default period (Today)
+            filterReports('today');
+        }
+
+        function exportReport() {
+            alert('Exporting report as PDF...');
+            // In a real implementation, this would generate and download a PDF
+        }
+
+        function updateSalesChart(period) {
+            console.log('Updating sales chart for period:', period);
+            // This would update the sales trend chart
+        }
+
+        function updateCategoryChart(period) {
+            console.log('Updating category chart for period:', period);
+            // This would update the revenue by category chart
+        }
+
+        function loadSalesData(period = 'today', customFilters = null) {
+            // This function would load sales data based on the period and filters
+            console.log('Loading sales data for period:', period, 'with filters:', customFilters);
+            
+            // Update stats (this would be replaced with actual data)
+            document.getElementById('totalInvoices').textContent = '42';
+            document.getElementById('totalRevenue').textContent = '1,250,000 RWF';
+            document.getElementById('averageSale').textContent = '29,762 RWF';
+            document.getElementById('totalVat').textContent = '225,000 RWF';
+        }
+
+        function initializeCharts() {
+            // Sales Trend Chart
+            const salesCtx = document.getElementById('salesTrendChart');
+            if (salesCtx) {
+                new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Sales (RWF)',
+                            data: [120000, 190000, 150000, 180000, 220000, 195000, 175000],
+                            borderColor: '#1e293b',
+                            backgroundColor: 'rgba(30, 41, 59, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Revenue by Category Chart
+            const categoryCtx = document.getElementById('revenueCategoryChart');
+            if (categoryCtx) {
+                new Chart(categoryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Electronics', 'Clothing', 'Food', 'Books', 'Other'],
+                        datasets: [{
+                            data: [35, 25, 20, 15, 5],
+                            backgroundColor: [
+                                '#1e293b',
+                                '#475569',
+                                '#94a3b8',
+                                '#cbd5e1',
+                                '#e2e8f0'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

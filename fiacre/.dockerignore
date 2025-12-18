@@ -1,0 +1,6 @@
+# Ignore git and typical temp files
+.git
+.gitignore
+node_modules
+*.log
+.DS_Store

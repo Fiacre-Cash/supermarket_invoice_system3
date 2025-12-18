@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Supermarket Invoice System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/modal-alert.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Topbar -->
+        <header class="topbar no-print">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="topbar-brand">
+                <img src="assets/logo.png" alt="Logo" class="topbar-logo" onerror="this.style.display='none'">
+                <span>Supermarket Invoice System</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.print()">Print Invoice</button>
+                <button class="btn btn-secondary btn-sm" onclick="goBack()">Back</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar no-print" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Invoice View</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="billing.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Billing</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+        <div class="invoice-container">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
+                    <h1>Supermarket Invoice System</h1>
+                </div>
+                <div class="invoice-meta">
+                    <h2>INVOICE</h2>
+                    <p><strong>Invoice #:</strong> <span id="invoiceNumber"></span></p>
+                    <p><strong>Date:</strong> <span id="invoiceDate"></span></p>
+                    <p><strong>Client:</strong> <span id="clientName"></span></p>
+                    <p><strong>Cashier:</strong> <span id="cashierName"></span></p>
+                </div>
+            </div>
+            <div class="invoice-qr">
+                <div id="qrcode"></div>
+                <p class="qr-label">Scan to Verify</p>
+            </div>
+            </div>
+
+            <div class="invoice-divider"></div>
+
+            <div class="invoice-items">
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceItemsBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="invoice-summary">
+                <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <span id="invoiceSubtotal"></span>
+                </div>
+                <div class="summary-line">
+                    <span>VAT (18%):</span>
+                    <span id="invoiceVat"></span>
+                </div>
+                <div class="summary-line">
+                    <span>Discount:</span>
+                    <span id="invoiceDiscount"></span>
+                </div>
+                <div class="summary-line total-line">
+                    <span>Grand Total:</span>
+                    <span id="invoiceGrandTotal"></span>
+                </div>
+            </div>
+
+            <div class="invoice-footer">
+                <p>Thank you for your business!</p>
+                <p class="footer-note">This is a computer-generated invoice.</p>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/invoice.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+</html>
